@@ -25,7 +25,7 @@ macro_rules! println {
     ($($arg:tt)*) => {
         {
             use core::fmt::Write;
-            writeln!(UsbSerialJtag, $($arg)*).ok();
+            writeln!(esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
         }
     };
 }
@@ -36,7 +36,7 @@ macro_rules! print {
     ($($arg:tt)*) => {
         {
             use core::fmt::Write;
-            write!(UsbSerialJtag, $($arg)*).ok();
+            write!(esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
         }
     };
 }
