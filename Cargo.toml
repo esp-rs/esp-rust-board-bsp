@@ -8,6 +8,7 @@ panic-halt = "0.2.0"
 riscv-rt   = "0.8.1"
 shared-bus = { version = "0.2.3",  features = ["xtensa"] }
 shtcx      = { version = "0.10.0", optional = true }
+smart-leds = { version = "0.3.0",  optional = true }
 
 [dependencies.esp32c3-hal]
 git     = "https://github.com/esp-rs/esp-hal/"
@@ -18,5 +19,6 @@ git      = "https://github.com/jessebraham/icm42670/"
 optional = true
 
 [features]
-default  = ["sensors"]
+default  = ["sensors", "smartled"]
 sensors  = ["icm42670", "shtcx"]
+smartled = ["smart-leds"]

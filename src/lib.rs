@@ -16,6 +16,8 @@ pub use riscv_rt;
 pub use shared_bus;
 #[cfg(feature = "sensors")]
 pub use shtcx;
+#[cfg(feature = "smartled")]
+pub use smart_leds;
 
 /// Prints to the USB Serial JTAG peripheral, with a newline.
 #[macro_export]
