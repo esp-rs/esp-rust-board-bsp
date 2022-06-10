@@ -2,7 +2,16 @@
 #![no_main]
 
 use esp_rust_board::{
-    esp32c3_hal::{i2c::I2C, pac::Peripherals, prelude::*, Delay, RtcCntl, Timer, IO},
+    esp32c3_hal::{
+        clock::ClockControl,
+        i2c::I2C,
+        pac::Peripherals,
+        prelude::*,
+        Delay,
+        RtcCntl,
+        Timer,
+        IO,
+    },
     icm42670::{accelerometer::Accelerometer, Address, Icm42670},
     panic_halt as _,
     print,
@@ -14,9 +23,11 @@ use esp_rust_board::{
 
 #[entry]
 fn main() -> ! {
-    let mut peripherals = Peripherals::take().unwrap();
+    let peripherals = Peripherals::take().unwrap();
+    let mut system = peripherals.SYSTEM.split();
+    let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
-    let mut delay = Delay::new(peripherals.SYSTIMER);
+    let mut delay = Delay::new(&clocks);
     let mut rtc_cntl = RtcCntl::new(peripherals.RTC_CNTL);
     let mut timer0 = Timer::new(peripherals.TIMG0);
 
@@ -33,8 +44,9 @@ fn main() -> ! {
         peripherals.I2C0,
         io.pins.gpio10,
         io.pins.gpio8,
-        400_000,
-        &mut peripherals.SYSTEM,
+        400u32.kHz(),
+        &mut system.peripheral_clock_control,
+        &clocks,
     )
     .unwrap();
 

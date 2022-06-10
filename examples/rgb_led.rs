@@ -3,6 +3,7 @@
 
 use esp_rust_board::{
     esp32c3_hal::{
+        clock::ClockControl,
         pac,
         prelude::*,
         pulse_control::ClockSource,
@@ -25,7 +26,9 @@ use esp_rust_board::{
 
 #[entry]
 fn main() -> ! {
-    let mut peripherals = pac::Peripherals::take().unwrap();
+    let peripherals = pac::Peripherals::take().unwrap();
+    let mut system = peripherals.SYSTEM.split();
+    let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
     let mut rtc_cntl = RtcCntl::new(peripherals.RTC_CNTL);
     let mut timer0 = Timer::new(peripherals.TIMG0);
@@ -38,7 +41,7 @@ fn main() -> ! {
     // Configure RMT peripheral globally
     let pulse = PulseControl::new(
         peripherals.RMT,
-        &mut peripherals.SYSTEM,
+        &mut system.peripheral_clock_control,
         ClockSource::APB,
         0,
         0,
@@ -53,7 +56,7 @@ fn main() -> ! {
 
     // Initialize the Delay peripheral, and use it to toggle the LED state in a
     // loop.
-    let mut delay = Delay::new(peripherals.SYSTIMER);
+    let mut delay = Delay::new(&clocks);
 
     let mut color = Hsv {
         hue: 0,

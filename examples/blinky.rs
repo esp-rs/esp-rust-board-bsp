@@ -2,7 +2,15 @@
 #![no_main]
 
 use esp_rust_board::{
-    esp32c3_hal::{gpio::IO, pac::Peripherals, prelude::*, Delay, RtcCntl, Timer},
+    esp32c3_hal::{
+        clock::ClockControl,
+        gpio::IO,
+        pac::Peripherals,
+        prelude::*,
+        Delay,
+        RtcCntl,
+        Timer,
+    },
     panic_halt as _,
     println,
     riscv_rt::entry,
@@ -11,8 +19,10 @@ use esp_rust_board::{
 #[entry]
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
+    let system = peripherals.SYSTEM.split();
+    let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
-    let mut delay = Delay::new(peripherals.SYSTIMER);
+    let mut delay = Delay::new(&clocks);
     let mut rtc_cntl = RtcCntl::new(peripherals.RTC_CNTL);
     let mut timer0 = Timer::new(peripherals.TIMG0);
 
