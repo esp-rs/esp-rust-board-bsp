@@ -9,9 +9,9 @@
 #![no_std]
 
 pub use esp32c3_hal;
+pub use esp_backtrace;
 #[cfg(feature = "sensors")]
 pub use icm42670;
-pub use panic_halt;
 pub use riscv_rt;
 pub use shared_bus;
 #[cfg(feature = "sensors")]
@@ -25,7 +25,7 @@ macro_rules! println {
     ($($arg:tt)*) => {
         {
             use core::fmt::Write;
-            writeln!(esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
+            writeln!($crate::esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
         }
     };
 }
@@ -36,7 +36,7 @@ macro_rules! print {
     ($($arg:tt)*) => {
         {
             use core::fmt::Write;
-            write!(esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
+            write!($crate::esp32c3_hal::UsbSerialJtag, $($arg)*).ok();
         }
     };
 }

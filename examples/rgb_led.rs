@@ -14,8 +14,7 @@ use esp_rust_board::{
         Timer,
         IO,
     },
-    panic_halt as _,
-    riscv_rt::entry,
+    esp_backtrace as _,
     smart_leds::{
         brightness,
         gamma,
@@ -24,7 +23,7 @@ use esp_rust_board::{
     },
 };
 
-#[entry]
+#[riscv_rt::entry]
 fn main() -> ! {
     let peripherals = pac::Peripherals::take().unwrap();
     let mut system = peripherals.SYSTEM.split();

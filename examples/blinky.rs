@@ -11,12 +11,11 @@ use esp_rust_board::{
         RtcCntl,
         Timer,
     },
-    panic_halt as _,
+    esp_backtrace as _,
     println,
-    riscv_rt::entry,
 };
 
-#[entry]
+#[riscv_rt::entry]
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
     let system = peripherals.SYSTEM.split();

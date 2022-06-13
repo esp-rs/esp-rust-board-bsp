@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-panic-halt = "0.2.0"
 riscv-rt   = "0.8.1"
 shared-bus = { version = "0.2.3",  features = ["xtensa"] }
 shtcx      = { version = "0.10.0", optional = true }
@@ -13,7 +12,12 @@ smart-leds = { version = "0.3.0",  optional = true }
 [dependencies.esp32c3-hal]
 git     = "https://github.com/esp-rs/esp-hal/"
 package = "esp32c3-hal"
-rev     = "1752e17"
+rev     = "9c244ba"
+
+[dependencies.esp-backtrace]
+git      = "https://github.com/esp-rs/esp-backtrace"
+rev      = "b7c9f49"
+features = ["esp32c3", "exception-handler", "panic-handler", "print-jtag-serial"]
 
 [dependencies.icm42670]
 git      = "https://github.com/jessebraham/icm42670/"

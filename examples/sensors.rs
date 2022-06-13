@@ -12,16 +12,15 @@ use esp_rust_board::{
         Timer,
         IO,
     },
+    esp_backtrace as _,
     icm42670::{accelerometer::Accelerometer, Address, Icm42670},
-    panic_halt as _,
     print,
     println,
-    riscv_rt::entry,
     shared_bus::BusManagerSimple,
     shtcx::{shtc3, LowPower, PowerMode},
 };
 
-#[entry]
+#[riscv_rt::entry]
 fn main() -> ! {
     let peripherals = Peripherals::take().unwrap();
     let mut system = peripherals.SYSTEM.split();
