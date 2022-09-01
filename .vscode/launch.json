@@ -1,0 +1,92 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Blinky (Debug)",
+            "type": "cortex-debug",
+            "request": "attach", // attach instead of launch, because otherwise flash write is attempted, but fails
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/target/riscv32imac-unknown-none-elf/debug/examples/blinky",
+            "interface": "jtag",
+            "svdFile": "${workspaceRoot}/esp32c3.svd",
+            "gdbPath": "${workspaceRoot}/../../esp/riscv32-esp-elf/bin/riscv32-esp-elf-gdb", // Set this to point to Espressif's GDB version
+            "toolchainPrefix": "riscv32-esp-elf",
+            "openOCDPreConfigLaunchCommands": [
+                "set ESP_RTOS none"
+            ],
+            "serverpath": "${workspaceRoot}/../../esp/openocd-esp32/bin/openocd", // Set this to point to Espressif's OpenOCD version
+            "configFiles": [
+                "board/esp32c3-builtin.cfg"
+            ],
+            "overrideAttachCommands": [
+                "set remote hardware-watchpoint-limit 2",
+                "mon halt",
+                "flushregs"
+            ],
+            "overrideRestartCommands": [
+                "mon reset halt",
+                "flushregs",
+                "c",
+            ],
+        },
+        {
+            "name": "RGB LED (Debug)",
+            "type": "cortex-debug",
+            "request": "attach", // attach instead of launch, because otherwise flash write is attempted, but fails
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/target/riscv32imac-unknown-none-elf/debug/examples/rgb_led",
+            "interface": "jtag",
+            "svdFile": "${workspaceRoot}/esp32c3.svd",
+            "gdbPath": "${workspaceRoot}/../../esp/riscv32-esp-elf/bin/riscv32-esp-elf-gdb", // Set this to point to Espressif's GDB version
+            "toolchainPrefix": "riscv32-esp-elf",
+            "openOCDPreConfigLaunchCommands": [
+                "set ESP_RTOS none"
+            ],
+            "serverpath": "${workspaceRoot}/../../esp/openocd-esp32/bin/openocd", // Set this to point to Espressif's OpenOCD version
+            "configFiles": [
+                "board/esp32c3-builtin.cfg"
+            ],
+            "overrideAttachCommands": [
+                "set remote hardware-watchpoint-limit 2",
+                "mon halt",
+                "flushregs"
+            ],
+            "overrideRestartCommands": [
+                "mon reset halt",
+                "flushregs",
+                "c",
+            ],
+        },
+        {
+            "name": "Sensors (Debug)",
+            "type": "cortex-debug",
+            "request": "attach", // attach instead of launch, because otherwise flash write is attempted, but fails
+            "servertype": "openocd",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/target/riscv32imac-unknown-none-elf/debug/examples/sensors",
+            "interface": "jtag",
+            "svdFile": "${workspaceRoot}/esp32c3.svd",
+            "gdbPath": "${workspaceRoot}/../../esp/riscv32-esp-elf/bin/riscv32-esp-elf-gdb", // Set this to point to Espressif's GDB version
+            "toolchainPrefix": "riscv32-esp-elf",
+            "openOCDPreConfigLaunchCommands": [
+                "set ESP_RTOS none"
+            ],
+            "serverpath": "${workspaceRoot}/../../esp/openocd-esp32/bin/openocd", // Set this to point to Espressif's OpenOCD version
+            "configFiles": [
+                "board/esp32c3-builtin.cfg"
+            ],
+            "overrideAttachCommands": [
+                "set remote hardware-watchpoint-limit 2",
+                "mon halt",
+                "flushregs"
+            ],
+            "overrideRestartCommands": [
+                "mon reset halt",
+                "flushregs",
+                "c",
+            ],
+        }
+    ]
+}
