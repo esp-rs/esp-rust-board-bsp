@@ -9,9 +9,9 @@ A board support package for the [ESP Rust Board]. Includes the dependencies requ
 You can debug your applications for the ESP Rust Board using [Visual Studio Code] together with the [Cortex-Debug plugin].
 This repository provides a [VSCode launch configuration] for debugging all the provided examples.
 Feel free to use this file as a template for your applications.
-Note that you need to install the `[riscv32-esp-elf]` tools provided by Xtensa to successfully debug with VSCode.
+Note that you need to install the [riscv32-esp-elf] tools provided by Xtensa to successfully debug with VSCode.
 
-**IMPORTANT:** in the `launch.json` file of your application, you must properly modify `gdbPath` and `serverpath` to point to the location of the `[riscv32-esp-elf]` tools in your machine.
+**IMPORTANT:** in the `launch.json` file of your application, you must properly modify `gdbPath` and `serverpath` to point to the location of the [riscv32-esp-elf] tools in your machine.
 
 **IMPORTANT:** as the launch configuration request is set to `attach`, VSCode won't flash your application to your Rust Board.
 Instead, it assumes that your board has been already flashed with the target application.
