@@ -4,27 +4,16 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-riscv-rt   = "0.9.0"
-shared-bus = { version = "0.2.4",  features = ["xtensa"] }
-shtcx      = { version = "0.10.0", optional = true }
-smart-leds = { version = "0.3.0",  optional = true }
-
-[dependencies.esp32c3-hal]
-git     = "https://github.com/esp-rs/esp-hal/"
-package = "esp32c3-hal"
-rev     = "1655e36"
-
-[dependencies.esp-backtrace]
-git      = "https://github.com/esp-rs/esp-backtrace"
-rev      = "9eb1cb4"
-features = ["esp32c3", "exception-handler", "panic-handler", "print-jtag-serial"]
-
-[dependencies.icm42670]
-git      = "https://github.com/jessebraham/icm42670/"
-rev      = "eb0483b"
-optional = true
+esp-backtrace = { version = "0.2.0", features = ["esp32c3", "exception-handler", "panic-handler", "print-jtag-serial"] }
+esp-println   = { version = "0.3.0", features = ["esp32c3"] }
+esp32c3-hal   = "0.2.0"
+icm42670      = { version = "0.1.0",  optional = true }
+riscv-rt      = "0.9.0"
+shared-bus    = { version = "0.2.4",  optional = true, features = ["xtensa"] }
+shtcx         = { version = "0.10.0", optional = true }
+smart-leds    = { version = "0.3.0",  optional = true }
 
 [features]
 default  = ["sensors", "smartled"]
-sensors  = ["icm42670", "shtcx"]
-smartled = ["smart-leds"]
+sensors  = ["icm42670", "shared-bus", "shtcx"]
+smartled = ["esp32c3-hal/smartled", "smart-leds"]

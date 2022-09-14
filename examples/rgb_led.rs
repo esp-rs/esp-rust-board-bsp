@@ -4,20 +4,16 @@
 use esp_rust_board::{
     esp32c3_hal::{
         clock::ClockControl,
-        pac,
+        pac::Peripherals,
         prelude::*,
         pulse_control::ClockSource,
+        timer::TimerGroup,
         utils::{smartLedAdapter, SmartLedsAdapter},
-        Delay,
-        PulseControl,
-        RtcCntl,
-        Timer,
-        IO,
+        Delay, PulseControl, Rtc, IO,
     },
     esp_backtrace as _,
     smart_leds::{
-        brightness,
-        gamma,
+        brightness, gamma,
         hsv::{hsv2rgb, Hsv},
         SmartLedsWrite,
     },
@@ -25,17 +21,22 @@ use esp_rust_board::{
 
 #[riscv_rt::entry]
 fn main() -> ! {
-    let peripherals = pac::Peripherals::take().unwrap();
+    let peripherals = Peripherals::take().unwrap();
     let mut system = peripherals.SYSTEM.split();
     let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
-    let mut rtc_cntl = RtcCntl::new(peripherals.RTC_CNTL);
-    let mut timer0 = Timer::new(peripherals.TIMG0, clocks.apb_clock);
+    let mut rtc = Rtc::new(peripherals.RTC_CNTL);
+    let timer_group0 = TimerGroup::new(peripherals.TIMG0, &clocks);
+    let mut wdt0 = timer_group0.wdt;
+    let timer_group1 = TimerGroup::new(peripherals.TIMG1, &clocks);
+    let mut wdt1 = timer_group1.wdt;
 
-    // Disable watchdogs
-    rtc_cntl.set_super_wdt_enable(false);
-    rtc_cntl.set_wdt_enable(false);
-    timer0.disable();
+    // Disable the watchdog timers. For the ESP32-C3, this includes the Super WDT,
+    // the RTC WDT, and the TIMG WDT.
+    rtc.swd.disable();
+    rtc.rwdt.disable();
+    wdt0.disable();
+    wdt1.disable();
 
     // Configure RMT peripheral globally
     let pulse = PulseControl::new(
@@ -53,8 +54,7 @@ fn main() -> ! {
     let io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
     let mut led = <smartLedAdapter!(1)>::new(pulse.channel0, io.pins.gpio2);
 
-    // Initialize the Delay peripheral, and use it to toggle the LED state in a
-    // loop.
+    // Initialize the Delay peripheral and use it to toggle the LED in a loop.
     let mut delay = Delay::new(&clocks);
 
     let mut color = Hsv {
@@ -73,7 +73,7 @@ fn main() -> ! {
             data = [hsv2rgb(color)];
             // When sending to the LED, we do a gamma correction first (see smart_leds
             // documentation for details) and then limit the brightness to 10 out of 255 so
-            // that the output it's not too bright.
+            // that the output is not too bright.
             led.write(brightness(gamma(data.iter().cloned()), 10))
                 .unwrap();
 
